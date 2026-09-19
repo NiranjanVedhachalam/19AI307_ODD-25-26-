@@ -374,15 +374,20 @@ Create a program that sends different types of notifications: "email", "sms", an
 To write a Java program that demonstrates a Behavioral Pattern using the Factory Method, allowing different notification types to send messages through a common interface.
 
 ## ALGORITHM :
-1.	Start the program.
-2.	Import the necessary package 'java.util'
-3.	Create an interface Notification with method notifyUser().
-4. Implement concrete classes: EmailNotification, SMSNotification, and PushNotification.
-5. Create a NotificationFactory that returns the appropriate object based on user input.
-6. In main(), get the notification type from the user.
-7. Call the notifyUser() method of the returned object.
-8. If no valid type is provided, display an error.
-9. Stop the program.
+1.Start the program.
+2.Create the NotificationContext object.
+3.Read the notification type from the user.
+4.If the input is "exit", terminate the program.
+5.Otherwise, check the notification type:
+6.If it is email, create EmailNotification.
+If it is sms, create SMSNotification.
+If it is push, create PushNotification.
+7.Set the selected notification as the strategy using setStrategy().
+Call sendNotification() from the NotificationContext.
+8.The selected strategy executes its notifyUser() method.
+9.If the input is invalid, display "Invalid notification type".
+10.Repeat steps 3–9 until the user enters "exit".
+11.Stop the program.
 
 
 
@@ -399,44 +404,46 @@ RegisterNumber: 21222224110042
 
 ## SOURCE CODE:
 ```
+
 import java.util.Scanner;
 
-interface Notification {
+// ===== Strategy Interface =====
+interface NotificationStrategy {
     void notifyUser();
 }
 
-// ===== Concrete Notifications =====
-class EmailNotification implements Notification {
+// ===== Concrete Strategies =====
+class EmailNotification implements NotificationStrategy {
     public void notifyUser() {
         System.out.println("Sending Email Notification");
     }
 }
 
-class SMSNotification implements Notification {
+class SMSNotification implements NotificationStrategy {
     public void notifyUser() {
         System.out.println("Sending SMS Notification");
     }
 }
 
-class PushNotification implements Notification {
+class PushNotification implements NotificationStrategy {
     public void notifyUser() {
         System.out.println("Sending Push Notification");
     }
 }
 
-// ===== Factory =====
-class NotificationFactory {
-    public Notification createNotification(String type) {
-        if (type == null) return null;
-        switch (type.toLowerCase()) {
-            case "email":
-                return new EmailNotification();
-            case "sms":
-                return new SMSNotification();
-            case "push":
-                return new PushNotification();
-            default:
-                return null;
+// ===== Context =====
+class NotificationContext {
+    private NotificationStrategy strategy;
+
+    public void setStrategy(NotificationStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public void sendNotification() {
+        if (strategy != null) {
+            strategy.notifyUser();
+        } else {
+            System.out.println("No notification strategy selected");
         }
     }
 }
@@ -445,23 +452,41 @@ class NotificationFactory {
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        NotificationFactory factory = new NotificationFactory();
+        NotificationContext context = new NotificationContext();
 
         while (true) {
             String input = sc.nextLine().trim();
-            if (input.equalsIgnoreCase("exit")) break;
 
-            Notification n = factory.createNotification(input);
-            if (n != null) {
-                n.notifyUser();
-            } else {
-                System.out.println("Invalid notification type: " + input);
+            if (input.equalsIgnoreCase("exit")) {
+                break;
             }
+
+            switch (input.toLowerCase()) {
+                case "email":
+                    context.setStrategy(new EmailNotification());
+                    break;
+
+                case "sms":
+                    context.setStrategy(new SMSNotification());
+                    break;
+
+                case "push":
+                    context.setStrategy(new PushNotification());
+                    break;
+
+                default:
+                    System.out.println("Invalid notification type: " + input);
+                    continue;
+            }
+
+            context.sendNotification();
         }
 
         sc.close();
     }
 }
+
+
 ```
 
 
