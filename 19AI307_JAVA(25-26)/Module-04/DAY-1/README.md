@@ -366,12 +366,12 @@ Thus, the Java program to simulate Shape Drawing using the Factory Design Patter
 # Ex.No:4(D) DESIGN PATTERN  ---- BEHAVIOUR PATTERN
 
 ## QUESTION:
-Create a program that sends different types of notifications: "email", "sms", and "push". Use the Factory Pattern to generate the appropriate notification sender and call its notifyUser() method.
+Create a program that sends different types of notifications: "email", "sms", and "push". Use the Behaviour Pattern to generate the appropriate notification sender and call its notifyUser() method.
 
 
 
 ## AIM:
-To write a Java program that demonstrates a Behavioral Pattern using the Factory Method, allowing different notification types to send messages through a common interface.
+To write a Java program that demonstrates a Behavioral Pattern, allowing different notification types to send messages through a common interface.
 
 ## ALGORITHM :
 1.Start the program.
