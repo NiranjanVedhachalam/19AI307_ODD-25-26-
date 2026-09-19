@@ -261,7 +261,7 @@ You will implement a Shape interface with concrete classes for different shapes 
 
 
 ## AIM:
-To write a Java program that implements the Factory Design Pattern to create and draw shapes dynamically based on user input.
+To write a Java program that implements the abstract Factory Design Pattern to create and draw shapes dynamically based on user input.
 
 ## ALGORITHM :
 1.	Start the program.
@@ -279,8 +279,8 @@ To write a Java program that implements the Factory Design Pattern to create and
  ```
 /*
 Program to implement variables and Operators using Java
-Developed by:  SHREYESHKAR SEKAR
-RegisterNumber: 212224220099
+Developed by:  Niranjan V
+RegisterNumber: 212224110042
 */
 ```
 
@@ -288,10 +288,12 @@ RegisterNumber: 212224220099
 ```
 import java.util.Scanner;
 
+// ===== Abstract Product =====
 interface Shape {
     void draw();
 }
 
+// ===== Concrete Products =====
 class Circle implements Shape {
     public void draw() {
         System.out.println("Drawing Circle");
@@ -310,42 +312,77 @@ class Rectangle implements Shape {
     }
 }
 
-class ShapeFactory {
-    public Shape getShape(String shapeType) {
+// ===== Abstract Factory =====
+interface ShapeFactory {
+    Shape getShape();
+}
+
+// ===== Concrete Factories =====
+class CircleFactory implements ShapeFactory {
+    public Shape getShape() {
+        return new Circle();
+    }
+}
+
+class SquareFactory implements ShapeFactory {
+    public Shape getShape() {
+        return new Square();
+    }
+}
+
+class RectangleFactory implements ShapeFactory {
+    public Shape getShape() {
+        return new Rectangle();
+    }
+}
+
+// ===== Factory Provider =====
+class FactoryProvider {
+    public static ShapeFactory getFactory(String shapeType) {
+
         if (shapeType == null) {
             return null;
         }
+
         switch (shapeType.toLowerCase()) {
             case "circle":
-                return new Circle();
+                return new CircleFactory();
+
             case "square":
-                return new Square();
+                return new SquareFactory();
+
             case "rectangle":
-                return new Rectangle();
+                return new RectangleFactory();
+
             default:
                 return null;
         }
     }
 }
 
+// ===== Main Class =====
 public class Main {
     public static void main(String[] args) {
+
         Scanner sc = new Scanner(System.in);
-        ShapeFactory factory = new ShapeFactory();
-        
+
         while (true) {
             String input = sc.nextLine().trim();
+
             if (input.equalsIgnoreCase("exit")) {
                 break;
             }
-            
-            Shape shape = factory.getShape(input);
-            if (shape != null) {
+
+            ShapeFactory factory = FactoryProvider.getFactory(input);
+
+            if (factory != null) {
+                Shape shape = factory.getShape();
                 shape.draw();
             } else {
                 System.out.println("Invalid shape: " + input);
             }
         }
+
         sc.close();
     }
 }
